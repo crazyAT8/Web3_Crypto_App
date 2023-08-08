@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
+pragma experimental ABIEncoderV2;
+
+import "hardhat/console.sol";
 
 contract Transactions {
     uint256 transactionCount;
@@ -7,7 +10,7 @@ contract Transactions {
     event Transfer(address from, address receiver, uint amount, string message, uint256 timestamp, string keyword);
 
     struct TransferStruct {
-        address semder;
+        address sender;
         address receiver;
         uint amount;
         string message;
