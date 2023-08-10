@@ -1,25 +1,16 @@
-const hre = require("hardhat");
+async function main() {
+  const [deployer] = await ethers.getSigners();
 
-const main = async () => {
-  const transactionsFactory = await hre.ethers.getContractFactory("Transactions");
-  const transactionsContract = await transactionsFactory.deploy();
+  console.log("Deploying contracts with the account:", deployer.address);
 
-  await transactionsContract.deployed();
+  const token = await ethers.deployContract("Token");
 
-  console.log("Transactions address: ", transactionsContract.address);
+  console.log("Token address:", await token.getAddress());
 }
 
-const runMain = async () => {
-  try {
-    await main();
-    process.exit(0);
-  } catch (error) {
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
     console.error(error);
     process.exit(1);
-  }
-}
-
-runMain();
-
-
-
+  });
