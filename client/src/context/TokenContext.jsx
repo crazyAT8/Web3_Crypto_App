@@ -21,13 +21,41 @@ const getEthereumContract = () => {
 
 
 export const TokenProvider = ({ children }) => {
+    // const [connectedAccount, setConnectedAccount] = useState(initialState);
+    const [currentAccount, setCurrentAccount] = useState("");
 
     const checkIfWalletIsConnected = async () => {
-        if(!ethereum) return alert("Please install metamask"); 
+        try {
+            if(!ethereum) return alert("Please install metamask"); 
 
-        const accounts = await ethereum.request({ method: `eth_accounts` });
+            const accounts = await ethereum.request({ method: "eth_accounts" });
 
-        console.log(accounts);
+            if(accounts.length) {
+                setCurrentAccount(accounts[0]);
+
+                // getAllTransactions();
+            } else {
+                console.log('No accounts found');
+            }
+        } catch (error) {
+            console.log(error);
+
+            throw new Error("No ethereum object.");
+        }
+    }
+
+    const connectWallet = async () => {
+        try {
+            if(!ethereum) return alert("Please install metamask");
+
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+    
+            setCurrentAccount(accounts[0]);
+        } catch (error) {
+            console.log(error);
+
+            throw new Error("No ethereum object.");
+        }
     }
 
     useEffect(() => {
@@ -35,7 +63,7 @@ export const TokenProvider = ({ children }) => {
     }, []);
 
     return (
-        <TokenContext.Provider value={{  }}>
+        <TokenContext.Provider value={{ connectWallet, currentAccount }}>
             {children}
         </TokenContext.Provider>
     )
