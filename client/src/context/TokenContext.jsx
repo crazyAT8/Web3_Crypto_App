@@ -26,7 +26,7 @@ export const TokenProvider = ({ children }) => {
     const [formData, setFormData] = useState({ addressTo: '', amount: '', keyword: '', message: '' });
 
     const handleChange = (e, name) => {
-        setFormData((prevState) => {( ...prevState, [name]: e.target.value )});
+        setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
     }
 
     const checkIfWalletIsConnected = async () => {
@@ -49,18 +49,6 @@ export const TokenProvider = ({ children }) => {
         }
     }
 
-    const sendTransaction = async () => {
-        try {
-            if(!ethereum) return alert("Please install metamask"); 
-
-            // get the data from the form...
-        } catch (error) {
-            console.log(error);
-
-            throw new Error("No ethereum object.");
-        }
-    }
-
     const connectWallet = async () => {
         try {
             if(!ethereum) return alert("Please install metamask");
@@ -75,12 +63,26 @@ export const TokenProvider = ({ children }) => {
         }
     }
 
+    const sendTransaction = async () => {
+        try {
+            if(!ethereum) return alert("Please install metamask"); 
+
+            // get the data from the form...
+            const { addressTo, amount, keyword, message } = formData;
+            getEthereumContract();
+        } catch (error) {
+            console.log(error);
+
+            throw new Error("No ethereum object.")
+        }
+    }
+
     useEffect(() => {
         checkIfWalletIsConnected();
     }, []);
 
     return (
-        <TokenContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange }}>
+        <TokenContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction }}>
             {children}
         </TokenContext.Provider>
     )
