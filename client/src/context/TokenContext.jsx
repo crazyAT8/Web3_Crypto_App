@@ -21,13 +21,12 @@ const getEthereumContract = () => {
 
 
 export const TokenProvider = ({ children }) => {
-    // const [connectedAccount, setConnectedAccount] = useState(initialState);
     const [currentAccount, setCurrentAccount] = useState("");
-    // const [formData, setFormData] = useState({ addressTo: '', amount: '', keyword: '', message: '' });
+    const [formData, setFormData] = useState({ addressTo: '', amount: '', keyword: '', message: '' });
 
-    // const handleChange = (e, name) => {
-    //     setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
-    // }
+    const handleChange = (e, name) => {
+        setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
+    }
 
     const checkIfWalletIsConnected = async () => {
         try {
@@ -63,26 +62,26 @@ export const TokenProvider = ({ children }) => {
         }
     }
 
-    // const sendTransaction = async () => {
-    //     try {
-    //         if(!ethereum) return alert("Please install metamask"); 
+    const sendTransaction = async () => {
+        try {
+            if(!ethereum) return alert("Please install metamask"); 
 
-    //         // get the data from the form...
-    //         const { addressTo, amount, keyword, message } = formData;
-    //         getEthereumContract();
-    //     } catch (error) {
-    //         console.log(error);
+            // get the data from the form...
+            const { addressTo, amount, keyword, message } = formData;
+            getEthereumContract();
+        } catch (error) {
+            console.log(error);
 
-    //         throw new Error("No ethereum object.")
-    //     }
-    // }
+            throw new Error("No ethereum object.");
+        }
+    }
 
     useEffect(() => {
         checkIfWalletIsConnected();
     }, []);
 
     return (
-        <TokenContext.Provider value={{ connectWallet, currentAccount }}>
+        <TokenContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction }}>
             {children}
         </TokenContext.Provider>
     )
